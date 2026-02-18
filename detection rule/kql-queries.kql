@@ -1,1 +1,10 @@
+Syslog
+| where ProcessName == "sshd"
+| where SyslogMessage contains "invalid user"
+   or SyslogMessage contains "Failed password"
+| extend
+    AttackerIP = extract(@"(\d{1,3}(\.\d{1,3}){3})", 1, SyslogMessage)
+| summarize FailedAttempts = count()
+    by AttackerIP, bin(TimeGenerated, 5m)
+| where FailedAttempts >= 3
 
