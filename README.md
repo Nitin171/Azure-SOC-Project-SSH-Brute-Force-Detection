@@ -1,71 +1,86 @@
-# Azure SOC Project – SSH Brute Force Detection
+# 🛡️ Azure SOC Project – SSH Brute Force Detection
 
 ## 📌 Project Overview
 
-This project demonstrates a real-world Security Operations Center (SOC) scenario by simulating SSH brute-force attacks on an Azure Linux Virtual Machine and detecting them using Microsoft Sentinel.
+This project demonstrates a real-world Security Operations Center (SOC) workflow in Microsoft Azure by detecting and investigating SSH brute-force attacks on a Linux virtual machine.
 
-The goal was to design and implement an end-to-end cloud security monitoring pipeline capable of detecting unauthorized SSH login attempts, generating security incidents, and triggering automated alerts.
+The lab simulates attacker behavior, collects authentication logs, builds detection rules using Microsoft Sentinel (SIEM), and investigates generated security incidents — replicating enterprise-level cloud threat detection and response.
 
 ---
 
 ## 🎯 Objectives
 
-- Deploy and secure an Azure Linux Virtual Machine
+- Deploy and secure a Linux VM in Azure
 - Simulate SSH brute-force attacks
-- Collect and analyze Linux authentication logs
-- Detect suspicious login activity using KQL
-- Automatically generate incidents in Microsoft Sentinel
-- Trigger alert notifications using Azure Logic Apps
+- Collect authentication logs centrally
+- Build detection rules using KQL
+- Generate and investigate security incidents
+- Validate end-to-end detection workflow
 
 ---
 
-## 🏗 Architecture Overview
+## 🏗️ Architecture
 
-Azure Linux VM  
-⬇  
-Linux Authentication Logs (`/var/log/auth.log`)  
-⬇  
-Log Analytics Workspace  
-⬇  
-Microsoft Sentinel (SIEM)  
-⬇  
-KQL Detection Rule  
-⬇  
-Incident Creation  
-
+Internet (Attacker)
+│
+▼
+Azure NSG (Network-level filtering)
+│
+▼
+Linux VM (Inside VNet & Subnet)
+│
+├── UFW Firewall (OS-level protection)
+├── SSH Hardening (Secure access control)
+└── Fail2Ban (Automatic IP blocking)
+│
+▼
+Azure Monitor Agent
+│
+▼
+Log Analytics Workspace
+│
+▼
+Microsoft Sentinel (SIEM)
+│
+▼
+Incident Detection & Investigation
 
 ---
 
-## 🛠 Technologies Used
+## ⚙️ Environment Setup
 
-- Microsoft Azure  
-- Microsoft Sentinel (SIEM)  
-- Azure Log Analytics  
-- Azure Linux Virtual Machine  
-- Network Security Groups (NSG)  
-- UFW Firewall  
-- Kusto Query Language (KQL)  
+- Microsoft Azure Student Subscription
+- Azure Linux Virtual Machine
+- Virtual Network (VNet) & Subnet
+- Network Security Group (NSG)
+- Azure Monitor Agent
+- Log Analytics Workspace
+- Microsoft Sentinel
 
+---
 
 ## 🔐 Security Hardening Implemented
 
-- Configured Network Security Group (NSG) rules  
-- Restricted SSH access to controlled IP ranges  
-- Enabled UFW firewall on Linux VM  
-- Disabled password-based authentication  
-- Implemented SSH key-based authentication  
-- Monitored and logged unauthorized login attempts  
+### 🔹 Network-Level Protection
+- Configured NSG rules to restrict inbound traffic
+- Allowed only required ports (SSH – Port 22)
+
+### 🔹 Host-Level Protection
+- Enabled UFW firewall
+- Disabled password-based SSH authentication
+- Disabled root login
+- Enforced key-based authentication
+
+### 🔹 Intrusion Prevention
+- Configured Fail2Ban to monitor authentication logs
+- Automatically blocked IP addresses performing repeated failed login attempts
 
 ---
 
-## 🚨 Attack Simulation
+## 🧪 Attack Simulation
 
-A brute-force SSH attack was simulated against the Azure Linux VM to generate multiple failed authentication attempts.
+To validate detection capabilities, SSH brute-force attempts were simulated:
 
-This allowed validation of:
-
-- Log ingestion pipeline  
-- Detection accuracy  
-- Incident generation  
-- Alert workflow automation  
+```bash
+ssh fakeuser@<VM_Public_IP>
 
